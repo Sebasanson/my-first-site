@@ -5,4 +5,11 @@ phases:
     commands:
       - echo "Building the Docker image"
       - docker build -t my-first-site .
+      - docker imagesversion: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Building the Docker image"
+      - docker build -t my-first-site .
       - docker images
