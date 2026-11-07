@@ -1,8 +1,15 @@
 version: 0.2
 
 phases:
+  pre_build:
+    commands:
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - REPO=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/my-first-site
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      - echo Building the Docker image
       - docker build -t my-first-site .
-      - docker images
+      - docker tag my-first-site:latest $REPO:latest
+  post_build:
+    commands:
+      - docker push $REPO:latest
